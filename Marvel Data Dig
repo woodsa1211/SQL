@@ -1,0 +1,184 @@
+/* Put your data in here and query it! */
+/*  Based on the website http://marvel.wikia.com/Main_Page
+ with popularity data from http://observationdeck.io9.com/something-i-found-marvel-character-popularity-poll-cb-1568108064 
+ and power grid data from http://marvel.wikia.com/Power_Grid#Power
+ Collected by: https://www.khanacademy.org/profile/Mentrasto/
+ */
+
+CREATE TABLE marvels (ID INTEGER PRIMARY KEY,
+    name TEXT,
+    popularity INTEGER,
+    alignment TEXT,
+    gender TEXT, 
+    height_m NUMERIC,
+    weight_kg NUMERIC,
+    hometown TEXT,
+    intelligence INTEGER,
+    strength INTEGER,
+    speed INTEGER,
+    durability INTEGER,
+    energy_Projection INTEGER,
+    fighting_Skills INTEGER);
+    
+INSERT INTO marvels VALUES(1, "Spider Man", 1, "Good", "Male", 1.78, 75.75, "USA", 4, 4, 3, 3, 1, 4); 
+INSERT INTO marvels VALUES(2, "Iron Man", 20, "Neutral", "Male", 1.98, 102.58, "USA", 6, 6, 5, 6, 6, 4); 
+INSERT INTO marvels VALUES(3, "Hulk", 18, "Neutral", "Male", 2.44, 635.29, "USA", 1, 7, 3, 7, 5, 4); 
+INSERT INTO marvels VALUES(4, "Wolverine", 3, "Good", "Male", 1.6, 88.46, "Canada", 2, 4, 2, 4, 1, 7);
+INSERT INTO marvels VALUES(5, "Thor", 5, "Good", "Male", 1.98, 290.3, "Asgard", 2, 7, 7, 6, 6, 4);
+INSERT INTO marvels VALUES(6, "Green Goblin", 91, "Bad", "Male", 1.93, 174.63, "USA", 4, 4, 3, 4, 3, 3);
+INSERT INTO marvels VALUES(7, "Magneto", 11, "Neutral", "Male", 1.88, 86.18, "Germany", 6, 3, 5, 4, 6, 4);
+INSERT INTO marvels VALUES(8, "Thanos", 47, "Bad", "Male", 2.01, 446.79, "Titan", 6, 7, 7, 6, 6, 4);
+INSERT INTO marvels VALUES(9, "Loki", 32, "Bad", "Male", 1.93, 238.14, "Jotunheim", 5, 5, 7, 6, 6, 3);
+INSERT INTO marvels VALUES(10, "Doctor Doom", 19, "Bad", "Male", 2.01, 188.24, "Latveria", 6, 4, 5, 6, 6, 4);
+INSERT INTO marvels VALUES(11, "Jean Grey", 8, "Good", "Female", 1.68, 52.16, "USA", 3, 2, 7, 7, 7, 4);
+INSERT INTO marvels VALUES(12, "Rogue", 4, "Good", "Female", 1.73, 54.43, "USA", 7, 7, 7, 7, 7, 7);
+INSERT INTO marvels VALUES(13, "Storm", 2, "Good", "Female", 1.80, 66, "Kenya", 2, 2, 3, 2, 5, 4);
+INSERT INTO marvels VALUES(14, "Nightcrawler", 6, "Good", "Male", 1.75, 73, "Germany", 3, 2, 7, 2, 1, 3);
+INSERT INTO marvels VALUES(15, "Gambit", 7, "Good", "Male", 1.88, 81, "EUA", 2, 2, 2, 2, 2, 4);
+INSERT INTO marvels VALUES(16, "Captain America", 9, "Good", "Male", 1.88, 108, "EUA", 3, 3, 2, 3, 1, 6);
+INSERT INTO marvels VALUES(17, "Cyclops", 10, "Good", "Male", 1.90, 88, "EUA", 3, 2, 2, 2, 5, 4);
+INSERT INTO marvels VALUES(18, "Emma Frost", 12, "Neutral", "Female", 1.78, 65, "EUA", 4, 4, 2, 5, 5, 3);
+INSERT INTO marvels VALUES(19, "Kitty Pryde", 13, "Good", "Female", 1.68, 50, "EUA", 4, 2, 2, 3, 1, 5);
+INSERT INTO marvels VALUES(20, "Daredevil", 14, "Good", "Male", 1.83, 91, "EUA", 3, 3, 2, 2, 4, 5);
+INSERT INTO marvels VALUES(21, "Punisher", 50, "Neutral", "Male", 1.85, 91, "EUA", 3, 3, 2, 2, 1, 6);
+INSERT INTO marvels VALUES(22, "Silver Surfer", 33, "Good", "Male", 1.93, 102, "Zenn-La", 3, 7, 7, 6, 7, 2);
+INSERT INTO marvels VALUES(23, "Ghost Rider", 86, "Good", "Male", 1.88, 99, "EUA", 2, 4, 3, 5, 4, 2);
+INSERT INTO marvels VALUES(24, "Venon", 78, "Neutral", "Male", 1.90, 118, "EUA", 3, 4, 2, 6, 1, 4);
+INSERT INTO marvels VALUES(25, "Juggernaut", 76, "Neutral", "Male", 2.87, 862, "EUA", 2, 7, 2, 7, 1, 4);
+INSERT INTO marvels VALUES(26, "Professor X", 58, "Good", "Male", 1.83, 86, "EUA", 5, 2, 2, 2, 5, 3);
+
+--  Which hero has the highest and lowest intelligence
+
+SELECT * 
+FROM marvels; 
+
+SELECT name, MAX(intelligence)
+FROM marvels; 
+
+SELECT name, MIN(Intelligence) 
+FROM marvels; 
+
+-- What's the Average Intelligence 
+
+SELECT  AVG(intelligence) 
+FROM marvels;
+
+-- What's the Average Fighting Skills? 
+SELECT AVG(Fighting_Skills) 
+FROM marvels; 
+
+-- Who's the most popular? 
+SELECT name, MAX(popularity)
+FROM marvels; 
+
+-- Grouping by gender 
+
+-- Counting Male Heros 
+SELECT Count(Gender) AS Male 
+FROM marvels
+WHERE Gender = 'Male';  
+
+-- Counting Female Heros 
+SELECT Count(Gender) AS Female 
+FROM marvels
+WHERE Gender = 'Female'; 
+
+-- HAVING 
+
+-- Heros with the best energy_Projection 
+
+SELECT name, Energy_Projection 
+FROM marvels 
+GROUP BY Energy_Projection 
+HAVING Energy_Projection > 4; 
+
+-- Heros with no energy_Projection 
+SELECT name, Energy_Projection 
+FROM marvels 
+GROUP BY Energy_Projection 
+HAVING Energy_Projection = 1; 
+
+-- Heros with the best fighting skills 
+SELECT name, Fighting_Skills
+FROM marvels 
+GROUP BY Fighting_Skills
+HAVING Fighting_Skills > 4; 
+
+-- Heros with little/no fighting skills 
+SELECT name, Fighting_Skills
+FROM marvels 
+GROUP BY Fighting_Skills
+HAVING Fighting_Skills < 3; 
+
+-- Heros with the best durability 
+SELECT name, durability 
+FROM marvels 
+GROUP BY durability 
+HAVING durability > 4; 
+
+-- Heros with little durability 
+SELECT name, durability 
+FROM marvels 
+GROUP BY durability 
+HAVING durability < 3; 
+
+-- Grouping data with Case 
+-- Grouping by Durability 
+
+SELECT name, 
+CASE 
+    WHEN durability < 3 THEN 'Weak' 
+    when durability < 5 THEN 'Enhanced' 
+    WHEN durability < 7 then 'Superhuman' 
+    ELSE 'Virtually Indestructible'
+    END as 'durability_scale' 
+FROM marvels;  
+
+-- Grouping by Intelligence 
+
+SELECT name, 
+CASE 
+    WHEN intelligence < 3 THEN 'Normal' 
+    when intelligence < 5 THEN 'Learned' 
+    WHEN intelligence < 7 then 'Genuis' 
+    ELSE 'Omniscient'
+    END as 'Intelligence_scale' 
+FROM marvels;
+
+
+-- Grouping by Fighting Skills 
+SELECT name, 
+CASE 
+    WHEN fighting_skills < 3 THEN 'Poor' 
+    when fighting_skills < 5 THEN 'Experienced Fighter' 
+    WHEN fighting_skills < 7 then 'Master of several forms of combat' 
+    ELSE 'Master of all forms of combat'
+    END as 'Fighting Skills_scale' 
+FROM marvels;
+
+-- Grouping by Popularity 
+SELECT name, popularity, 
+CASE 
+    WHEN popularity < 10 THEN 'Very Popular' 
+    when popularity < 50 THEN 'Fairly Popular' 
+    WHEN popularity < 85 then 'Somewhat Popular' 
+    ELSE 'Unpopular'
+    END as 'Popularity_scale' 
+FROM marvels;
+
+-- Filtering data with And/OR 
+-- Names of all female heros from the USA 
+
+SELECT name, hometown 
+FROM marvels 
+WHERE Gender = 'Female' AND Hometown = 'USA'; 
+
+-- Names of all Bad/Neutral Heros 
+SELECT name, alignment
+FROM marvels 
+WHERE alignment = 'Bad' OR alignment = 'Neutral'; 
+
+-- Names of all that have good fighting skills or Durability 
+SELECT name, fighting_skills, durability 
+FROM marvels 
+WHERE fighting_skills = 7 OR durability = 7 
