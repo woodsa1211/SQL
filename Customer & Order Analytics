@@ -1,0 +1,54 @@
+-- How many orders placed in January? A: 9732
+SELECT COUNT(OrderId) 
+FROM BIT_DB.JanSales
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+-- How many of these orders were for Iphones? A: 379 
+SELECT  COUNT(Quantity) 
+FROM BIT_DB.JanSales
+WHERE Product = 'iPhone' 
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'; 
+
+-- Select the customer account #'s for all the orders that were placed in Feb? 
+SELECT distinct acctnum
+FROM BIT_DB.customers a
+
+INNER JOIN BIT_DB.FebSales b
+ON a.order_id=b.orderid
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID'; 
+
+-- Which product was the cheapest in Jan? What was the price? A: AAA Batteries. 2.99. 
+SELECT MIN(price), Product 
+FROM BIT_DB.JanSales 
+WHERE Product IS NOT NULL
+GROUP BY product, price 
+ORDER BY price ASC
+LIMIT 1;
+
+-- What is the total revenue for each product solf in January? 
+SELECT ROUND(SUM(Quantity) * Price) as Revenue, Product
+FROM BIT_DB.JanSales 
+GROUP BY Product;
+
+--Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+-- A: AAA Batteries (4 pack) q: 2 and money spent= 7.68 
+
+SELECT SUM(quantity) as Quantity, product, SUM(Quantity) * price AS Revenue 
+FROM BIT_DB.FebSales 
+WHERE location = '548 Lincoln St, Seattle, WA 98101' 
+GROUP BY product;
+
+--How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+-- A: 278 customers with more than 2 products. AvgSpent = 12.79
+
+SELECT count(b.acctnum), avg(quantity)*price as AvgSpent  
+FROM BIT_DB.FebSales a
+LEFT JOIN BIT_DB.customers b 
+ON a.orderID = b.order_ID 
+WHERE quantity > 2 
+AND length(orderid) = 6 
+AND orderid <> 'Order ID';
+
