@@ -1,0 +1,34 @@
+/* Create table about the people and what they do here */
+/* Create table about the people and what they do here */
+
+-- Harry Potter Characters  
+
+CREATE TABLE fictional_characters (CharacterId INTEGER PRIMARY KEY, Name TEXT, Age INTEGER, Species TEXT, Powers TEXT, Status TEXT);
+INSERT INTO fictional_characters VALUES (1, 'Harry Potter', 18, 'Wizard', 'Yes', 'Alive'); 
+INSERT INTO fictional_characters VALUES (2, 'Ron Weasley', 19, 'Wizard', 'Yes', 'Alive'); 
+INSERT INTO fictional_characters VALUES (3, 'Hermoine Granger', 18, 'Witch', 'Yes', 'Alive'); 
+INSERT INTO fictional_characters VALUES (4, 'Fred Weasley', 22, 'Wizard', 'Yes', 'Dead'); 
+INSERT INTO fictional_characters VALUES (5, 'George Weasley', 22, 'Wizard', 'Yes', 'Alive');
+INSERT INTO fictional_characters VALUES (6, 'Dudley Dursley', 18, 'Non-Magical', 'No', 'Alive');
+INSERT INTO fictional_characters VALUES (7, 'Dobby', 37, 'Elf', 'Yes', 'Dead');
+INSERT INTO fictional_characters VALUES (8, 'Voldemort', 71, 'Wizard', 'Yes', 'Dead');
+INSERT INTO fictional_characters VALUES (9, 'Bellatrix Lestrange', 47, 'Witch', 'Yes', 'Dead');
+INSERT INTO fictional_characters VALUES (10, 'Dolores Umbridge', 58, 'Witch', 'Yes', 'Alive'); 
+
+CREATE TABLE character_history (CharacterId INTEGER PRIMARY KEY, Alignment TEXT, Death_Location TEXT, Accomplishment TEXT);
+
+INSERT INTO character_history VALUES (1, 'Good', 'N/A', 'Defeated Voldemort at Battle of Hogwarts');
+INSERT INTO character_history VALUES (2, 'Good', 'N/A', 'Destroyed Horcrux at Battle of Hogwarts');
+INSERT INTO character_history VALUES (3, 'Good', 'N/A', 'Destroyed Horcrux at Battle of Hogwarts');
+INSERT INTO character_history VALUES (4, 'Good','Battle of Hogwarts', 'Owner of Weasleys Wizard Wheezes');
+INSERT INTO character_history VALUES (5, 'Good', 'N/A', 'Owner of Weasleys Wizard Wheezes');
+INSERT INTO character_history VALUES (6, 'Neutral','N/A', 'Apologized to Harry');
+INSERT INTO character_history VALUES (7, 'Good', 'Shell Cottage', 'Helped Harry escape from Malfoy Manor');
+INSERT INTO character_history VALUES (8, 'Evil', 'Battle of Hogwarts', 'Ruled the Death Eaters');
+INSERT INTO character_history VALUES (9, 'Evil','Battle of Hogwarts', 'Killed many Aurors including Sirius Black');
+INSERT INTO character_history VALUES (10, 'Evil', 'N/A', 'Headmistress of Hogwarts'); 
+
+SELECT a.CharacterId, a.Name, a.Age,a.Species, a.Powers,a.Status, b.Alignment, b.Death_Location, b.Accomplishment
+FROM fictional_characters a 
+JOIN character_history b 
+ON a.CharacterId = b.CharacterId; 
