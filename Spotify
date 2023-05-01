@@ -89,6 +89,9 @@ GROUP BY duration_ms
 HAVING MIN(duration_ms) 
 LIMIT 1; 
 
+--Average duration 
+SELECT  AVG(duration_ms)
+FROM Spotifydata;
 
 --avg popularity, danceability, and energy by artist and track
 SELECT
