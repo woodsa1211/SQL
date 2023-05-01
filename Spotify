@@ -128,3 +128,16 @@ FROM BIT_DB.spotifydata
 GROUP BY artist_name 
 HAVING COUNT(artist_name) > 1 AND popularity < 82
 
+-- CTE for Top Stars 
+WITH popularity_average_CTE AS (
+SELECT s.artist_name,
+AVG(s.popularity) AS average_popularity
+FROM SpotifyData s 
+GROUP BY s.artist_name
+)
+ 
+SELECT  artist_name,
+        average_popularity,
+        'Top Star' AS tag
+FROM popularity_average_CTE
+WHERE average_popularity>=90;
