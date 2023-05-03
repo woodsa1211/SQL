@@ -1,0 +1,277 @@
+--Customers not based in the USA 
+SELECT * 
+FROM customers 
+where country IS NOT 'USA';
+
+--Count Customers not based in the USA 
+SELECT COUNT(Country) as CustomersOutUSA
+FROM customers 
+where country IS NOT 'USA';
+
+--Customers based in the USA 
+SELECT * 
+FROM customers 
+where country = 'USA';
+
+--Count Customers based in the USA 
+SELECT Count(Country) as CustomersUSA
+FROM customers 
+where country = 'USA';
+
+--Customers based in Brazil 
+SELECT * 
+FROM customers 
+where country = 'Brazil';
+
+--Count of Customers based in Brazil 
+SELECT COUNT(country) 
+FROM customers 
+where country = 'Brazil';
+
+--Invoices for customers from Brazil 
+SELECT *
+FROM invoices i 
+WHERE BillingCountry = 'Brazil'; 
+
+--Show Employees who are Sales Agents 
+SELECT * 
+FROM employees 
+WHERE Title = 'Sales Support Agent'; 
+
+--List of billing countries from Invoice table 
+SELECT DISTINCT BillingCountry 
+FROM invoices; 
+
+-- Invoices associated with each sales agent 
+SELECT e.LastName, e.Firstname, i.InvoiceId
+FROM employees e 
+INNER JOIN customers c 
+ON c.SupportRepid = e.employeeid 
+INNER JOIN invoices i 
+ON i.Customerid = c.CustomerId 
+ORDER BY c.SupportRepid; 
+
+--Invoices Total, Customer Name, Customer Country, Sales Agent First and Last Name 
+SELECT i.total, c.FirstName, c.LastName, c.Country, e.FirstName, e.LastName
+FROM employees e 
+INNER JOIN customers c 
+ON c.SupportRepid = e.employeeid 
+INNER JOIN invoices i 
+ON i.Customerid = c.CustomerId 
+ORDER BY c.SupportRepid; 
+
+--How many invoices in 2009? 
+SELECT COUNT(*) AS Invoices2009
+FROM invoices i  
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--Total Sales in 2009 
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--Write a query that includes the purchased track name with each invoice line ID. 
+SELECT t.Name, i.InvoiceLineId
+FROM chinook.Invoice_items i
+JOIN chinook.Tracks t 
+ON i.TrackId = t.TrackId;
+
+--Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT ar.name as Artist, t.Name as Track, i.InvoiceLineId
+FROM chinook.Invoice_items i
+LEFT JOIN chinook.tracks t 
+ON i.TrackID=t.TrackID
+INNER JOIN chinook.albums a
+ON a.AlbumID=t.AlbumID
+LEFT JOIN chinook.artists ar
+ON ar.ArtistID=a.ArtistID;
+
+--Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre. 
+SELECT t.Name AS 'Track Name', a.Title AS 'Album Title', m.Name AS 'Media Type', g.Name AS 'Genre'
+FROM chinook.tracks t
+JOIN chinook.Albums a 
+on a.AlbumId = t.AlbumId
+JOIN chinook.Media_Types m
+on m.MediaTypeId = t.MediaTypeId
+JOIN chinook.Genres g
+on g.GenreId = t.GenreId;
+
+--Show the total sales made by each sales agent
+
+SELECT emp.FirstName, emp.LastName,
+ROUND(SUM(Inv.Total), 2) as 'Total Sales' 
+FROM chinook.Employees emp
+
+JOIN chinook.Customers cust 
+ON cust.SupportRepId = emp.EmployeeId
+
+JOIN chinook.Invoices Inv 
+ON Inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent' 
+GROUP BY emp.FirstName;
+
+--Which sales agent made the most dollars in sales in 2009? 
+SELECT emp.FirstName, emp.LastName,
+ROUND(SUM(Inv.Total), 2) as 'Total Sales' 
+FROM chinook.Employees emp
+JOIN chinook.Customers cust 
+ON cust.SupportRepId = emp.EmployeeId
+JOIN chinook.Invoices Inv 
+ON Inv.CustomerId = cust.CustomerId
+WHERE emp.Title = 'Sales Support Agent' 
+AND Inv.InvoiceDate LIKE '2009%' 
+GROUP BY emp.FirstName
+ORDER BY (round(sum(Inv.Total), 2))  DESC LIMIT 1;
+
+--Counts of the different media type purchased 
+SELECT COUNT(m.name) as CountMediaType, m.name,  m.MediaTypeId
+FROM tracks t 
+JOIN media_types m 
+ON  m.MediaTypeId = t.MediaTypeId
+JOIN  invoice_items it 
+ON t.TrackId = it.TrackId 
+JOIN invoices i 
+ON it.InvoiceLineId = i.invoiceid 
+GROUP BY m.name; 
+
+--Most Purchased Artist 
+
+SELECT a.title,  at.name, t.composer, MAX(it.total) 
+FROM tracks t  
+JOIN albums a 
+ON t.albumid = a.albumid 
+JOIN artists at 
+ON at.Artistid = a.artistid 
+JOIN invoice_items i 
+ON t.TrackId = i.TrackId 
+JOIN invoices it 
+ON it.InvoiceId = i.InvoiceLineId
+ORDER BY MAX(it.total) DESC; 
+
+--least Purchased Artist 
+SELECT a.title,  at.name, t.composer, MIN(it.total) 
+FROM tracks t  
+JOIN albums a 
+ON t.albumid = a.albumid 
+JOIN artists at 
+ON at.Artistid = a.artistid 
+JOIN invoice_items i 
+ON t.TrackId = i.TrackId 
+JOIN invoices it 
+ON it.InvoiceId = i.InvoiceLineId
+ORDER BY MIN(it.total) DESC; 
+
+ 
+--Higest purchased Album  
+SELECT MAX(i.total) AS MostPurchased, t.name, t.composer, g.name 
+FROM tracks t 
+JOIN genres g
+ON g.Genreid = t.genreid 
+JOIN invoice_items it 
+ON t.trackid = it.trackid 
+JOIN invoices i 
+ON it.InvoiceLineId = i.invoiceid; 
+
+--Least Purchased Album 
+SELECT MIN(i.total) AS LeastPurchased, t.name, t.composer, g.name 
+FROM tracks t 
+JOIN genres g
+ON g.Genreid = t.genreid 
+JOIN invoice_items it 
+ON t.trackid = it.trackid 
+JOIN invoices i 
+ON it.InvoiceLineId = i.invoiceid; 
+
+--- Total amount spent per customer 
+SELECT SUM(i.total) as TotalSpent, c.FirstName, c.LastName 
+FROM customers c 
+JOIN invoices i 
+ON c.customerid = i.customerid 
+GROUP BY c.customerid; 
+
+--Customer who spent the most 
+SELECT SUM(i.total) as TotalSpent, c.FirstName, c.LastName 
+FROM customers c 
+JOIN invoices i 
+ON c.customerid = i.customerid 
+GROUP BY c.FirstName, c.LastName 
+ORDER BY SUM(i.total) DESC
+LIMIT 1; 
+
+--Customer who spent the least 
+SELECT SUM(i.total) as TotalSpent, c.FirstName, c.LastName 
+FROM customers c 
+JOIN invoices i 
+ON c.customerid = i.customerid 
+GROUP BY c.FirstName, c.LastName 
+ORDER BY SUM(i.total) ASC
+LIMIT 1; 
+
+--Purchases for 2009  
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+--Purchases for 2010 
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2010-01-01' AND '2010-12-31';
+
+--Purchases for 2011 
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2011-01-01' AND '2011-12-31';
+
+--Purchases for 2012 
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2012-01-01' AND '2012-12-31';
+
+--Purchases for 2013 
+SELECT SUM(i.total) 
+FROM invoices i 
+WHERE InvoiceDate BETWEEN '2013-01-01' AND '2013-12-31';
+
+--Convert from YYMMDDTT to YYMMDD 
+SELECT STRFTIME('%d/%m/%Y', InvoiceDate)
+FROM invoices; 
+
+--Yearly Earnings Ordered by most to least revenue 
+Select InvoiceDate, ROUND(SUM(total)), 
+CASE 
+WHEN 
+InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31' THEN '2009' 
+WHEN InvoiceDate BETWEEN '2010-01-01' AND '2010-12-31' THEN '2010' 
+WHEN InvoiceDate BETWEEN '2011-01-01' AND '2011-12-31' THEN '2011' 
+WHEN InvoiceDate BETWEEN '2012-01-01' AND '2012-12-31' THEN '2012'  
+WHEN InvoiceDate BETWEEN '2013-01-01' AND '2013-12-31' THEN '2013' 
+Else '2013' 
+End as 'Yearly_Invoices' 
+FROM invoices 
+GROUP BY CASE WHEN InvoiceDate BETWEEN '2010-01-01' AND '2010-12-31' THEN '2010' 
+WHEN InvoiceDate BETWEEN '2011-01-01' AND '2011-12-31' THEN '2011' 
+WHEN InvoiceDate BETWEEN '2012-01-01' AND '2012-12-31' THEN '2012' 
+WHEN InvoiceDate BETWEEN '2013-01-01' AND '2013-12-31' THEN '2013' 
+END 
+ORDER BY ROUND(SUM(total)) DESC;
+
+--Average Earnings per year 
+Select InvoiceDate, ROUND(AVG(total)), 
+CASE 
+WHEN 
+InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31' THEN '2009' 
+WHEN InvoiceDate BETWEEN '2010-01-01' AND '2010-12-31' THEN '2010' 
+WHEN InvoiceDate BETWEEN '2011-01-01' AND '2011-12-31' THEN '2011' 
+WHEN InvoiceDate BETWEEN '2012-01-01' AND '2012-12-31' THEN '2012'  
+WHEN InvoiceDate BETWEEN '2013-01-01' AND '2013-12-31' THEN '2013' 
+Else '2013' 
+End as 'Yearly_Invoices' 
+FROM invoices 
+GROUP BY CASE WHEN InvoiceDate BETWEEN '2010-01-01' AND '2010-12-31' THEN '2010' 
+WHEN InvoiceDate BETWEEN '2011-01-01' AND '2011-12-31' THEN '2011' 
+WHEN InvoiceDate BETWEEN '2012-01-01' AND '2012-12-31' THEN '2012' 
+WHEN InvoiceDate BETWEEN '2013-01-01' AND '2013-12-31' THEN '2013' 
+END 
+ORDER BY ROUND(AVG(total)) DESC;
+
